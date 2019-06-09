@@ -1,0 +1,40 @@
+steps:
+- name: 'gcr.io/cloud-builders/npm'
+  id: 'Install dependencies'
+  args: ['install']
+
+- name: 'gcr.io/cloud-builders/npm'
+  id: 'Lint'
+  args: ['run', 'lint']
+
+- name: 'gcr.io/cloud-builders/npm'
+  id: 'Test'
+  args: ['run', 'test:ci']
+
+- name: 'gcr.io/cloud-builders/npm'
+  id: 'Build'
+  args: ['run', 'build', '--', '--output-path', 'dist/html']
+  env:
+  - 'BUILD_ID=$BUILD_ID'
+
+# Build snapshot images and push them to Cloud Registry
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build deployable image (commit tag)'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/xlayers:$SHORT_SHA', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push deployable image (commit tag)'
+  args: ['push', 'gcr.io/$PROJECT_ID/xlayers:$SHORT_SHA']
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build deployable image (latest tag)'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/xlayers:latest', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push deployable image (latest tag)'
+  args: ['push', 'gcr.io/$PROJECT_ID/xlayers:latest']
+
+images:
+- 'gcr.io/$PROJECT_ID/xlayers:$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/xlayers:latest'
