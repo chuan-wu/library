@@ -4,7 +4,8 @@
   "description": "# How To Build - mvn clean package",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/chuan-wu/library/issues"
   },
-  "homepage": "https://github.com/chuan-wu/library#readme"
+  "homepage": "https://github.com/chuan-wu/library#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.13.0"
+  }
 }
